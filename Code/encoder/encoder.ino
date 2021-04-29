@@ -1,8 +1,9 @@
+//##############encoder/LCD Code Initalization#########################
+//###############################################################
 // LCD stuff
 #include <LiquidCrystal.h>
 // Create an LCD object. Parameters: (RS, E, D4, D5, D6, D7):
 LiquidCrystal lcd = LiquidCrystal(22, 24, 26, 28, 30, 32);
-
 
 // Rotary Encoder Inputs
 #define CLK 48
@@ -14,51 +15,48 @@ int currentStateCLK;
 int lastStateCLK;
 int rot_val;
 unsigned long lastButtonPress = 0;
+//###############################################################
 
 void setup() {
-  // Set encoder pins as inputs
-  pinMode(CLK,INPUT);
-  pinMode(DT,INPUT);
-  pinMode(SW, INPUT_PULLUP);
-
-  // Setup Serial Monitor
-  Serial.begin(9600);
-
-  // Read the initial state of CLK
-  lastStateCLK = digitalRead(CLK);
-
-  //LCD Screen display
-  // Specify the LCD's number of columns and rows. Change to (20, 4) for a 20x4
-  lcd.begin(16, 2);
+  encoder_LCD_setup();
 }
 
 void loop() {
   encoder(9);
   LCDdisplayspeed();
-  // Set the cursor on the third column and the first row, counting starts at 0:
-//  lcd.setCursor(2, 0);
-//  // Print the string 'Hello World!':
-//  lcd.print("Encoder Val");
-//  // Set the cursor on the third column and the second row:
-//  lcd.setCursor(2, 1);
-//  // Print the string 'LCD tutorial':
-//  lcd.print(counter);
-//  lcd.noAutoscroll();
+}
+
+void encoder_LCD_setup()
+{
+  //############# encoder/LCD Code Setup####################
+  //########################################################
+  // Set encoder pins as inputs
+  pinMode(CLK,INPUT);
+  pinMode(DT,INPUT);
+  pinMode(SW, INPUT_PULLUP);
+  // Setup Serial Monitor
+  Serial.begin(9600); //this can technically be 
+  // Read the initial state of CLK
+  lastStateCLK = digitalRead(CLK);
+  //LCD Screen display
+  // Specify the LCD's number of columns and rows. Change to (20, 4) for a 20x4
+  lcd.begin(16, 2);
 }
 void LCDdisplayspeed(){
-   // Set the cursor on the third column and the first row, counting starts at 0:
+   
+  // Set the cursor on the third column and the first row, counting starts at 0:
   lcd.setCursor(0, 0);
   // Print the string 'Hello World!':
-  lcd.print("Speed:");
+  lcd.print("PW:");
   // Set the cursor on the third column and the second row:
-  lcd.setCursor(7, 0);
+  lcd.setCursor(3, 0);
   // Print the string 'LCD tutorial':
   lcd.print(counter);
   lcd.noAutoscroll();
   }
 
 
-void encoder(int max_val){
+int encoder(int max_val){
   // Read the current state of CLK
   currentStateCLK = digitalRead(CLK);
   // If last and current state of CLK are different, then pulse occurred
@@ -82,7 +80,6 @@ void encoder(int max_val){
     Serial.print("Counter: ");
     Serial.println(counter);
   }
-
   // Remember last CLK state
   lastStateCLK = currentStateCLK;
   // Read the button state
@@ -99,4 +96,5 @@ void encoder(int max_val){
   }
   // Put in a slight delay to help debounce the reading
   delay(1);
+  return counter;
 }
