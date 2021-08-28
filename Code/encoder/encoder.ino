@@ -2,7 +2,7 @@
 //###############################################################
 // LCD stuff
 #include <LiquidCrystal.h>
-// Create an LCD object. Parameters: (RS, E, D4, D5, D6, D7):
+// Create an LCD obj Parameters: (RS, E, D4, D5, D6, D7):
 LiquidCrystal lcd = LiquidCrystal(22, 24, 26, 28, 30, 32);
 
 // Rotary Encoder Inputs
