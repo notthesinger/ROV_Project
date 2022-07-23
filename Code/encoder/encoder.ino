@@ -2,7 +2,8 @@
 //###############################################################
 //// IMPORT LIBRARIES
 // LCD library(s)
-#include <LiquidCrystal.h>
+//#include <LiquidCrystal.h>
+#include "Adafruit_LiquidCrystal.h"
 // IC2/Nunchuck library(s)
 #include <Wire.h>
 #include <WiiChuck.h>
@@ -11,11 +12,12 @@
 #include <DallasTemperature.h>
 
 // Create an LCD obj Parameters: (RS, E, D4, D5, D6, D7):
-LiquidCrystal lcd = LiquidCrystal(22, 24, 26, 28, 30, 32);
-
+Adafruit_LiquidCrystal lcd(0);
 
 // Define address of multiplexer
 Accessory nunchuck1;
+Accessory nunchuck2;
+
 #define TCAADDR 0x70
 
 // Sensor Variables
@@ -39,8 +41,9 @@ void tcaselect(uint8_t i) {
 void setup() {
   Serial.begin(9600);
   sensors.begin();
-  lcd.begin(16, 2);
   tcaselect(0);
+  lcd.begin(16, 2);
+  tcaselect(1);
   nunchuck1.begin();
   if (nunchuck1.type == Unknown) {
     nunchuck1.type = NUNCHUCK;
@@ -48,13 +51,14 @@ void setup() {
 }
 
 void loop() {
-  tcaselect(0);
+  tcaselect(1);
   nunchuck1.readData();    // Read inputs and update maps
   vertical_thurster = nunchuck1.getJoyY();
   Serial.println(vertical_thurster);
   sensors.requestTemperatures();
   tempC = sensors.getTempCByIndex(0);
   //START LCD DISPLAY
+  tcaselect(0);
   lcd.setCursor(0, 0);
   lcd.print("v:");
   // Set the cursor on the third column and the second row:
